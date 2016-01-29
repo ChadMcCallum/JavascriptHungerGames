@@ -18,18 +18,30 @@
     <![endif]-->
 </head>
 <body>
-    <div class="container">
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">Player</div>
+        <div class="col-md-4">Food</div>
+        <div class="col-md-4">Reputation</div>
     </div>
+</div>
+<script type="text/html" id="rowtemplate">
+    <div class="row" id="<%= id %>">
+        <div class="col-md-4"><%= instance.name %></div>
+        <div class="col-md-4 food"><%= food %></div>
+        <div class="col-md-4 rep"><%= reputation %></div>
+    </div>
+</script>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="scripts/bootstrap.min.js"></script>
-<script src="Scripts/underscore.js"></script>
-<script src="Scripts/runner.js"></script>
-<script type="text/javascript">
-    runner.init();
-    runner.run(1000);
-</script>
+    <script src="Scripts/underscore.js"></script>
+    <script src="Scripts/runner.js"></script>
+    <script type="text/javascript">
+        runner.init();
+        runner.run(1000);
+    </script>
 </body>
 </html>
