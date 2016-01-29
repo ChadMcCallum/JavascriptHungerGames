@@ -4,7 +4,7 @@ runner.Players = [];
 runner.init = function () {
     var template = _.template($('#rowtemplate').html());
     var i = 1;
-    _.each(players, function(player) {
+    _.each(players, function (player) {
         var p = {
             food: 300 * players.length - 1,
             reputation: 0,
@@ -18,7 +18,7 @@ runner.init = function () {
     });
 }
 
-runner.round = function(i) {
+runner.round = function (i) {
     log("Starting Round " + (i + 1), "bg-primary");
     //bonus hunt value
     var m = Math.round(Math.random() * ((runner.Players.length * (runner.Players.length - 1)) - 1) + 1);
@@ -78,6 +78,7 @@ runner.round = function(i) {
         log("Player " + player.instance.name + "'s food remaining: " + player.food, "bg-info");
         if (player.food <= 0) {
             log("Player " + player.instance.name + " has died!", "bg-danger");
+            $('#' + player.id).css("color", "red");
         }
         $('#' + player.id + " .food").html(player.food);
         $('#' + player.id + " .rep").html(player.reputation);
@@ -108,11 +109,11 @@ hunter.huntChoices = function (roundNumber, currentFood, currentRep, m, playerRe
     return results;
 };
 
-hunter.huntOutcomes = function(foodEarnings) {
+hunter.huntOutcomes = function (foodEarnings) {
 
 };
 
-hunter.roundEnd = function(award, m, numberHunters) {
+hunter.roundEnd = function (award, m, numberHunters) {
 
 };
 
@@ -165,9 +166,9 @@ function log(text, cls) {
 var helpHunters = {};
 
 helpHunters.name = "HelpHunters";
-helpHunters.huntChoices = function(roundNumber, currentFood, currentRep, m, playerReps) {
+helpHunters.huntChoices = function (roundNumber, currentFood, currentRep, m, playerReps) {
     var results = [];
-    _.each(playerReps, function(rep) {
+    _.each(playerReps, function (rep) {
         rep >= 0.5 ? results.push('h') : results.push('s');
     });
     return results;
@@ -182,3 +183,54 @@ helpHunters.roundEnd = function (award, m, numberHunters) {
 };
 
 players.push(helpHunters);
+
+var helpSlackers = {};
+
+helpSlackers.name = "helpSlackers";
+helpSlackers.huntChoices = function (roundNumber, currentFood, currentRep, m, playerReps) {
+    var results = [];
+    _.each(playerReps, function (rep) {
+        rep >= 0.5 ? results.push('s') : results.push('h');
+    });
+    return results;
+}
+
+helpSlackers.huntOutcomes = function (foodEarnings) {
+
+};
+
+helpSlackers.roundEnd = function (award, m, numberHunters) {
+
+};
+
+players.push(helpSlackers);
+
+var helpIfBonus = {};
+
+helpIfBonus.name = "helpIfBonus";
+helpIfBonus.huntChoices = function (roundNumber, currentFood, currentRep, m, playerReps) {
+    var results = [];
+    var likelyToHunt = _.reduce(playerReps, function (memo, rep) {
+        return memo + (rep > 0.5 ? 1 : 0);
+    });
+    if (likelyToHunt >= m - playerReps.length) {
+        _.each(playerReps, function(rep) {
+            results.push('h');
+        });
+    } else {
+        _.each(playerReps, function (rep) {
+            results.push('s');
+        });
+    }
+    return results;
+}
+
+helpIfBonus.huntOutcomes = function (foodEarnings) {
+
+};
+
+helpIfBonus.roundEnd = function (award, m, numberHunters) {
+
+};
+
+players.push(helpIfBonus);
